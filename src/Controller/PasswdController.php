@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Passwd;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,10 +11,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class PasswdController extends AbstractController
 {
     #[Route('/passwd', name: 'app_passwd')]
-    public function index(): Response
+    public function index(ManagerRegistry $doctrine): Response
     {
+        $entityManager = $doctrine->getManager();
+        $passwds = $entityManager->getRepository(Passwd::class)->findAll();
+
         return $this->render('passwd/index.html.twig', [
-            'controller_name' => 'PasswdController',
+            'passwds' => $passwds,
         ]);
     }
 }
